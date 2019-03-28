@@ -1,4 +1,3 @@
-import sys
 from tkinter import *
 import tkinter as tk
 male = 66.5
@@ -8,13 +7,11 @@ choose = ''
 activity = ''
 sex_test = ''
 choice = ''
-test_age = ''
-test_height = ''
-test_weight = ''
 score = ''
 total = ''
 activity_choice = str('')
 language = ''
+error_test = ''
 
 
 def clear():
@@ -49,17 +46,24 @@ def calculate_click():
     global age
     global height
     global weight
-    display_text.set('')
-    display.configure(state="normal")
+    global error_test
+    age = ''
+    height = ''
+    weight = ''
     try:
-        age = float(display_text_age.get())
-        height = float(display_text_height.get())
         weight = float(display_text_weight.get())
-        display.configure(state="normal")
+        height = float(display_text_height.get())
+        age = float(display_text_age.get())
         calculate()
     except ValueError:
+        if weight == '':
+            error_test = 'input weight'
+        elif height == '':
+            error_test = 'input height'
+        elif age == '':
+            error_test = 'input age'
         display.configure(state="normal")
-        display_text.set('Error')
+        display_text.set('Error: ' + error_test)
         display.configure(state="disable")
 
 
@@ -72,14 +76,24 @@ def calculate():
             score = eval('choose+(13.7*weight)+(5*height)-(6.8*age)')
             total = eval('score*activity')
             display_text.set(total)
+            display.configure(state="normal")
         if sex_test == 'female':
             score = eval('choose+(9.6*weight)+(1.85*height)-(4.7*age)')
             total = eval('score*activity')
             display_text.set(total)
+            display.configure(state="normal")
+        if sex_test == '':
+            display.configure(state="normal")
+            display_text.set('Error: choose Sex')
+            display.configure(state="disable")
     except ValueError:
-        print("error")
+        display.configure(state="normal")
+        display_text.set('Error')
+        display.configure(state="disable")
     except TypeError:
-        print('error')
+        display.configure(state="normal")
+        display_text.set('Error')
+        display.configure(state="disable")
 
 
 def listboxselect(index):
@@ -129,7 +143,7 @@ def ok():
 
 
 OPTIONS = ["Polish", "English"]
-master = Tk()
+master = tk.Tk()
 master.geometry('185x90')
 master.title('Be Fit 1.0')
 variable = StringVar(master)
