@@ -1,5 +1,8 @@
+# -*- coding: utf-8 -*-
 from tkinter import *
 import tkinter as tk
+import codecs
+
 male = 66.5
 female = 665
 over = ''
@@ -115,12 +118,15 @@ def listboxselect(index):
 
 
 def polish_language():
-    ct_listbox.delete(0, END)
-    with open("polish.txt", "r") as file:
-        line = file.readlines()
-        for a in line:
-            ct_listbox.insert(6, a)
-        ct_listbox.update()
+    try:
+        ct_listbox.delete(0, END)
+        with codecs.open("polish.txt", "r", "utf8") as file:
+            line = file.readlines()
+            for a in line:
+                ct_listbox.insert(6, a)
+            ct_listbox.update()
+    except UnicodeDecodeError:
+        print("error")
 
 
 def english_language():
