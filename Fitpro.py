@@ -15,6 +15,8 @@ total = ''
 activity_choice = str('')
 language = ''
 error_test = ''
+weight_conv = ''
+height_conv = ''
 
 
 def clear():
@@ -50,12 +52,14 @@ def calculate_click():
     global height
     global weight
     global error_test
+    global weight_conv
+    global height_conv
     age = ''
     height = ''
     weight = ''
     try:
-        weight = float(display_text_weight.get())
-        height = float(display_text_height.get())
+        weight = (float(display_text_weight.get())/weight_conv)
+        height = (float(display_text_height.get())/height_conv)
         age = float(display_text_age.get())
         calculate()
     except ValueError:
@@ -173,6 +177,10 @@ if language == 'Polish':
     button_female_lang = 'Kobieta'
     label_kcaltarget_lang = 'Zapotrzebowanie kaloryczne'
     button_quit_lang = 'Zamknij'
+    label_weight_unit_lang = 'kg'
+    label_height_unit_lang = 'cm'
+    weight_conv = float('1')
+    height_conv = float('1')
 if language == 'English':
     label_activity_lang = 'Choose your activity level:'
     button_clear_lang = 'Clear'
@@ -184,6 +192,10 @@ if language == 'English':
     button_female_lang = 'Female'
     label_kcaltarget_lang = 'CALORIES/DAY'
     button_quit_lang = 'Close'
+    label_weight_unit_lang = 'lbs'
+    label_height_unit_lang = 'ft'
+    weight_conv = float('2.2046226218')
+    height_conv = float('0.032808399')
 window = tk.Tk()
 window.geometry('510x460')
 window.title('Be Fit 1.0')
@@ -216,12 +228,18 @@ label_weight.place(x=30, y=90)
 display_text_weight = tk.StringVar()
 display_weight = tk.Entry(window, width=11, textvariable=display_text_weight)
 display_weight.place(x=81, y=90)
+label_weight_unit = tk.Label(window, text=label_weight_unit_lang)
+label_weight_unit.pack()
+label_weight_unit.place(x=150, y=90)
 
 label_height = tk.Label(window, text=label_height_lang)
 label_height.place(x=30, y=120)
 display_text_height = tk.StringVar()
 display_height = tk.Entry(window, width=11, textvariable=display_text_height)
 display_height.place(x=81, y=120)
+label_height_unit = tk.Label(window, text=label_height_unit_lang)
+label_height_unit.pack()
+label_height_unit.place(x=150, y=120)
 
 label_age = tk.Label(window, text=label_age_lang)
 label_age.place(x=30, y=150)
