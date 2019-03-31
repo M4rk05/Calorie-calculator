@@ -33,6 +33,13 @@ def window_pressed_x():
     window.destroy()
 
 
+#  default behaviour of destroying the: description window
+def desc_pressed_x():
+    global program
+    program = False
+    description.destroy()
+
+
 #  on click: clear program window to default
 def clear():
     display_text.set('')
@@ -63,6 +70,7 @@ def female_click():
 
 
 #  on click: checking entry widgets(unit test) and assigning numbers to variables + invoke func. calculate
+#  + invoke: description window
 def calculate_click():
     global age
     global height
@@ -78,6 +86,8 @@ def calculate_click():
         height = (float(display_text_height.get())/height_conv)
         age = float(display_text_age.get())
         calculate()
+        window.destroy()
+        desc_window()
     except ValueError:
         if weight == '':
             error_test = 'input weight'
@@ -153,7 +163,6 @@ def polish_language():
 
 #  loading text from english.txt and entering it the list
 def english_language():
-    global ct_listbox
     ct_listbox.delete(0, END)
     with open("english.txt", "r") as file:
         line = file.readlines()
@@ -162,12 +171,18 @@ def english_language():
         ct_listbox.update()
 
 
-#  button quit action : breaking mainloop and close window
+#  button quit action : on click -> will close program window
 def quit_click():
     global program
-    global window
     program = False
     window.destroy()
+
+
+#  button quit action : on click -> will close description window
+def desc_quit_click():
+    global program
+    program = False
+    description.destroy()
 
 
 #  set global language (from selected)
@@ -204,6 +219,88 @@ def change_language_click():
     global program
     global window
     window.destroy()
+
+
+#  invoke: description window
+#  loading data from variables to entry
+def desc_window():
+    global total
+    global description
+
+    description = tk.Tk()
+    description.protocol('WM_DELETE_WINDOW', desc_pressed_x)
+    description.geometry('510x460')
+    description.title('Be Fit 1.0')
+    desc_label_kcaltarget = tk.Label(description, text=label_kcaltarget_lang)
+    desc_label_kcaltarget.place(x=220, y=5)
+    desc_display_text = tk.StringVar()
+    desc_display = tk.Entry(description, textvariable=desc_display_text)
+    desc_display.place(x=380, y=5)
+    desc_display.configure(state="disable")
+    desc_display_text.set(total)
+
+    desc_menu = Menu(description)
+    desc_filemenu = Menu(desc_menu, tearoff=0)
+    desc_filemenu.add_command(label="Save",)
+    desc_filemenu.add_separator()
+    desc_filemenu.add_command(label="Exit", command=desc_quit_click)
+    desc_menu.add_cascade(label="File", menu=desc_filemenu)
+    description.config(menu=desc_menu)
+
+    desc_label_weight = tk.Label(description, text=label_weight_lang)
+    desc_label_weight.place(x=5, y=40)
+    desc_display_text_weight = tk.StringVar()
+    desc_display_weight = tk.Entry(description, width=11, textvariable=desc_display_text_weight)
+    desc_display_weight.place(x=56, y=40)
+    desc_label_weight_unit = tk.Label(description, text=label_weight_unit_lang)
+    desc_label_weight_unit.pack()
+    desc_label_weight_unit.place(x=125, y=40)
+    desc_display_weight.configure(state="disable")
+    desc_display_text_weight.set(weight)
+
+    desc_label_height = tk.Label(description, text=label_height_lang)
+    desc_label_height.place(x=5, y=70)
+    desc_display_text_height = tk.StringVar()
+    desc_display_height = tk.Entry(description, width=11, textvariable=desc_display_text_height)
+    desc_display_height.place(x=56, y=70)
+    desc_label_height_unit = tk.Label(description, text=label_height_unit_lang)
+    desc_label_height_unit.pack()
+    desc_label_height_unit.place(x=125, y=70)
+    desc_display_height.configure(state="disable")
+    desc_display_text_height.set(height)
+
+    desc_label_age = tk.Label(description, text=label_age_lang)
+    desc_label_age.place(x=5, y=10)
+    desc_display_text_age = tk.StringVar()
+    desc_display_age = tk.Entry(description, width=11, textvariable=desc_display_text_age)
+    desc_display_age.place(x=56, y=10)
+    desc_display_age.configure(state="disable")
+    desc_display_text_age.set(age)
+
+    desc_label_separate = tk.Label(description, text=99 * '-')
+    desc_label_separate.place(x=5, y=90)
+
+    global label_sex_lang
+    if language == 'Polish':
+        label_sex_lang = 'Płeć:'
+    else:
+        label_sex_lang = 'Sex:'
+    desc_label_sex = tk.Label(description, text=label_sex_lang)
+    desc_label_sex.place(x=220, y=70)
+
+    global label_sex_text_lang
+    if sex_test == 'female' and language == 'English':
+        label_sex_text_lang = 'Female'
+    if sex_test == 'female' and language == 'Polish':
+        label_sex_text_lang = 'Kobieta'
+    if sex_test == 'male' and language == 'English':
+        label_sex_text_lang = 'Male'
+    if sex_test == 'male' and language == 'Polish':
+        label_sex_text_lang = 'Mężczyzna'
+    desc_label_sex_text = tk.Label(description, text=label_sex_text_lang)
+    desc_label_sex_text.place(x=260, y=70)
+
+    description.mainloop()
 
 
 #  start mainloop
