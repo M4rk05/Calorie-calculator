@@ -85,16 +85,50 @@ def calculate_click():
         weight = (float(display_text_weight.get())/weight_conv)
         height = (float(display_text_height.get())/height_conv)
         age = float(display_text_age.get())
-        calculate()
-        window.destroy()
-        desc_window()
+        if activity == '':
+            if language == 'English':
+                display.configure(state="normal")
+                display_text.set('Error: Choose activity')
+                display.configure(state="disable")
+            if language == 'Polish':
+                display.configure(state="normal")
+                display_text.set('Error: Wybierz aktywność')
+                display.configure(state="disable")
+        else:
+            calculate()
+
+            try:
+                if sex_test == '':
+                    if language == 'English':
+                        display.configure(state="normal")
+                        display_text.set('Error: Choose sex')
+                        display.configure(state="disable")
+                    if language == 'Polish':
+                        display.configure(state="normal")
+                        display_text.set('Error: Wybierz płeć')
+                        display.configure(state="disable")
+                else:
+                    window.destroy()
+                    desc_window()
+
+            except NameError:
+                display.configure(state="normal")
+                display_text.set('Error: NameError')
+                display.configure(state="disable")
+
     except ValueError:
-        if weight == '':
+        if weight == '' and language == 'English':
             error_test = 'input weight'
-        elif height == '':
+        elif weight == '' and language == 'Polish':
+            error_test = 'Wprowadź wagę'
+        elif height == '' and language == 'English':
             error_test = 'input height'
-        elif age == '':
+        elif height == '' and language == 'Polish':
+            error_test = 'Wprowadź wzrost'
+        elif age == '' and language == 'English':
             error_test = 'input age'
+        elif age == '' and language == 'Polish':
+            error_test = 'Wprowadź wiek'
         display.configure(state="normal")
         display_text.set('Error: ' + error_test)
         display.configure(state="disable")
@@ -281,12 +315,18 @@ def desc_window():
     desc_label_separate.place(x=5, y=90)
 
     global label_sex_lang
+    global desc_activity_lang
     if language == 'Polish':
         label_sex_lang = 'Płeć:'
+        desc_activity_lang = 'Aktywność:'
     else:
         label_sex_lang = 'Sex:'
+        desc_activity_lang = 'Activity:'
     desc_label_sex = tk.Label(description, text=label_sex_lang)
     desc_label_sex.place(x=220, y=70)
+
+    desc_label_activity = tk.Label(description, text=desc_activity_lang)
+    desc_label_activity.place(x=220, y=45)
 
     global label_sex_text_lang
     if sex_test == 'female' and language == 'English':
@@ -299,6 +339,9 @@ def desc_window():
         label_sex_text_lang = 'Mężczyzna'
     desc_label_sex_text = tk.Label(description, text=label_sex_text_lang)
     desc_label_sex_text.place(x=260, y=70)
+
+    desc_label_activity_value = tk.Label(description, text=activity)
+    desc_label_activity_value.place(x=290, y=45)
 
     description.mainloop()
 
@@ -363,7 +406,7 @@ while program is True:
             label_kcaltarget = tk.Label(window, text=label_kcaltarget_lang)
             label_kcaltarget.place(x=30, y=40)
             display_text = tk.StringVar()
-            display = tk.Entry(window, textvariable=display_text)
+            display = tk.Entry(window, textvariable=display_text, width=50)
             display.configure(state="disabled")
             display.place(x=190, y=40)
 
