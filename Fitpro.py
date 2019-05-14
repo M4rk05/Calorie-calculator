@@ -255,16 +255,47 @@ def change_language_click():
     window.destroy()
 
 
+#  inputting text into the entry fields after click button "set"
+def desc_opt_menu_set():
+    global variable_goal
+    global options_goal
+    global kcal_text
+    global protein_text
+    global carbo_text
+    global fat_text
+#  when choose "lose weight"
+    if variable_goal.get() == options_goal[0]:
+        kcal_text.set(float(total)-300)
+        protein_text.set((float(kcal_text.get()) * 0.25) / 4)
+        carbo_text.set((float(kcal_text.get()) * 0.45) / 4)
+        fat_text.set((float(kcal_text.get()) * 0.30) / 9)
+#  when choose "increase weight"
+    elif variable_goal.get() == options_goal[1]:
+        kcal_text.set(float(total)+300)
+        protein_text.set((float(kcal_text.get()) * 0.20) / 4)
+        carbo_text.set((float(kcal_text.get()) * 0.55) / 4)
+        fat_text.set((float(kcal_text.get()) * 0.25) / 9)
+
+
 #  invoke: description window
 #  loading data from variables to entry
 def desc_window():
     global total
     global description
+    global variable_goal
+    global options_goal
+    global kcal_text
+    global protein_text
+    global carbo_text
+    global fat_text
 
     description = tk.Tk()
     description.protocol('WM_DELETE_WINDOW', desc_pressed_x)
     description.geometry('510x460')
     description.title('Be Fit 1.0')
+    filename = tk.PhotoImage(file="data/image/fit.png")
+    background_label_desc = tk.Label(description, image=filename)
+    background_label_desc.place(x=1, y=210)
     desc_label_kcaltarget = tk.Label(description, text=label_kcaltarget_lang)
     desc_label_kcaltarget.place(x=220, y=5)
     desc_display_text = tk.StringVar()
@@ -290,7 +321,7 @@ def desc_window():
     desc_label_weight_unit.pack()
     desc_label_weight_unit.place(x=125, y=40)
     desc_display_weight.configure(state="disable")
-    desc_display_text_weight.set(weight)
+    desc_display_text_weight.set(float(display_text_weight.get()))
 
     desc_label_height = tk.Label(description, text=label_height_lang)
     desc_label_height.place(x=5, y=70)
@@ -301,7 +332,7 @@ def desc_window():
     desc_label_height_unit.pack()
     desc_label_height_unit.place(x=125, y=70)
     desc_display_height.configure(state="disable")
-    desc_display_text_height.set(height)
+    desc_display_text_height.set(float(display_text_height.get()))
 
     desc_label_age = tk.Label(description, text=label_age_lang)
     desc_label_age.place(x=5, y=10)
@@ -313,6 +344,88 @@ def desc_window():
 
     desc_label_separate = tk.Label(description, text=99 * '-')
     desc_label_separate.place(x=5, y=90)
+
+#  labels and entry fields showing caloric demand (if you want reduction weight or gain)
+    global desc_text_goal
+    if language == 'Polish':
+        desc_text_goal = 'Cel:'
+        options_goal = ["Redukcja wagi", "Zwiększenie wagi"]
+    elif language == 'English':
+        desc_text_goal = 'Goal:'
+        options_goal = ["Lose weight", "Increase weight"]
+    desc_label_goal = tk.Label(description, text=desc_text_goal)
+    desc_label_goal.place(x=5, y=115)
+    variable_goal = StringVar(description)
+    variable_goal.set(options_goal[0])
+    goal_menu = OptionMenu(description, variable_goal, *options_goal)
+    goal_menu.pack()
+    goal_menu.configure(width=15)
+    goal_menu.place(x=50, y=110)
+
+# calories demand
+    global kcal_label_text
+    global kcal_label_2_text
+    if language == 'Polish':
+        kcal_label_text = 'POTRZEBUJESZ:'
+        kcal_label_2_text = 'kalorii.'
+    elif language == 'English':
+        kcal_label_text = '  YOU NEED:'
+        kcal_label_2_text = 'calories.'
+    kcal_label = tk.Label(description, text=kcal_label_text)
+    kcal_label.place(x=5, y=180)
+    kcal_label_2 = tk.Label(description, text=kcal_label_2_text)
+    kcal_label_2.place(x=225, y=180)
+    kcal_text = tk.StringVar()
+    kcal_entry = tk.Entry(description, textvariable=kcal_text, width=20)
+    kcal_entry.configure(state="disabled")
+    kcal_entry.place(x=100, y=180)
+
+#  button which is setting text to the entry fields
+    button_desc_ok = tk.Button(description, text='SET', command=desc_opt_menu_set)
+    button_desc_ok.pack()
+    button_desc_ok.place(x=190, y=112)
+
+# amount of protein
+    global protein_label_text
+    if language == 'Polish':
+        protein_label_text = 'Białko:'
+    elif language == 'English':
+        protein_label_text = 'Protein:'
+
+    protein_label = tk.Label(description, text=protein_label_text)
+    protein_label.place(x=295, y=110)
+    protein_text = tk.StringVar()
+    protein_entry = tk.Entry(description, textvariable=protein_text, width=20)
+    protein_entry.configure(state="disabled")
+    protein_entry.place(x=380, y=110)
+
+# amount of carbohydrates
+    global carbo_label_text
+    if language == 'Polish':
+        carbo_label_text = 'Węglowodany:'
+    elif language == 'English':
+        carbo_label_text = 'Carbohydrates:'
+
+    carbo_label = tk.Label(description, text=carbo_label_text)
+    carbo_label.place(x=295, y=140)
+    carbo_text = tk.StringVar()
+    carbo_entry = tk.Entry(description, textvariable=carbo_text, width=20)
+    carbo_entry.configure(state="disabled")
+    carbo_entry.place(x=380, y=140)
+
+# amount of fat
+    global fat_label_text
+    if language == 'Polish':
+        fat_label_text = 'Tłuszcz:'
+    elif language == 'English':
+        fat_label_text = 'Fat:'
+
+    fat_label = tk.Label(description, text=fat_label_text)
+    fat_label.place(x=295, y=170)
+    fat_text = tk.StringVar()
+    fat_entry = tk.Entry(description, textvariable=fat_text, width=20)
+    fat_entry.configure(state="disabled")
+    fat_entry.place(x=380, y=170)
 
     global label_sex_lang
     global desc_activity_lang
@@ -360,7 +473,7 @@ while program is True:
                 label_height_lang = 'Wzrost'
                 button_male_lang = 'Mężczyzna'
                 button_female_lang = 'Kobieta'
-                label_kcaltarget_lang = 'Zapotrzebowanie kaloryczne'
+                label_kcaltarget_lang = 'Aby utrzymać wagę:'
                 button_quit_lang = 'Zamknij'
                 label_weight_unit_lang = 'kg'
                 label_height_unit_lang = 'cm'
@@ -375,7 +488,7 @@ while program is True:
                 label_height_lang = 'Height'
                 button_male_lang = 'Male'
                 button_female_lang = 'Female'
-                label_kcaltarget_lang = 'CALORIES/DAY'
+                label_kcaltarget_lang = 'To hold weight you need:'
                 button_quit_lang = 'Close'
                 label_weight_unit_lang = 'lbs'
                 label_height_unit_lang = 'ft'
@@ -386,8 +499,7 @@ while program is True:
             window.protocol('WM_DELETE_WINDOW', window_pressed_x)
             window.geometry('510x460')
             window.title('Be Fit 1.0')
-            C = tk.Canvas(window, bg="blue", height=250, width=300)
-            filename = tk.PhotoImage(file="fit.png")
+            filename = tk.PhotoImage(file="data/image/fit.png")
             background_label = tk.Label(window, image=filename)
             background_label.place(x=1, y=210)
 
